@@ -32,6 +32,15 @@ namespace TodoApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
         {
+            IQueryable<TodoItem> TodoItemQ =
+            (from td in _context.TodoItems orderby td.IsComplete select td);
+
+            var items = await TodoItemQ.AsNoTracking().ToListAsync();
+            return items;
+
+            // return await TodoItemQ.AsNoTracking()
+            // .OrderByDescending(td => TodoApi.IsComplete);
+
             return await _context.TodoItems.ToListAsync();
         }
         [HttpPost]
